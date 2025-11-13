@@ -1,24 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Put The Files In The Bag 🎥 → 📦
+
+A modern media conversion tool that outputs multiple optimized formats with ready-to-embed code snippets.
+
+## Features
+
+- 🎬 **Video conversion**: MP4, WebM, GIF
+- 🖼️ **Image optimization**: WebP, AVIF, PNG, JPEG
+- 📋 **Code snippets**: HTML, React, Markdown (ready to copy)
+- ⚡ **In-memory processing**: Fast and secure
+- 🔒 **Privacy-first**: No files stored on disk
+- ✅ **Format selection**: Only convert what you need
+
+## How It Works
+
+1. **Upload**: Drop your video or image file
+2. **Select**: Choose which output formats you want
+3. **Convert**: Everything processes in-memory (nothing saved)
+4. **Download**: Get your files with embed code immediately
+5. **Done**: Nothing persists on our servers
+
+## Pricing
+
+### Free Tier
+- 3 conversions per day
+- Includes watermark on outputs
+- All formats available
+
+### Lifetime ($3.29)
+- Unlimited conversions
+- No watermarks
+- Priority processing
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Frontend**: Next.js 15 (App Router), TypeScript, Tailwind CSS
+- **Processing**: FFmpeg (video), Sharp (images) - all in-memory
+- **Auth**: Clerk for user management
+- **Rate Limiting**: File-based storage (`.rate-limit/store.json`)
+- **Data Transfer**: Base64-encoded data URLs
+
+## Architecture
+
+- ✅ All file processing happens in memory
+- ✅ Converted files returned as base64 data URLs
+- ✅ Rate limiting persists via JSON file (survives restarts)
+- ✅ No database needed for MVP
+- ✅ No permanent file storage
 
 ## Learn More
 

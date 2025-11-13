@@ -1,0 +1,44 @@
+# Docker
+.dockerignore
+Dockerfile
+docker-compose.yml
+
+# Node
+node_modules
+npm-debug.log
+
+# Next.js
+.next
+out
+.swc
+
+# Env files
+.env
+.env.local
+.env*.local
+
+# Uploads and temp
+uploads/
+.rate-limit/
+
+# Development
+.vscode
+.idea
+
+# Testing
+coverage/
+.nyc_output/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+docs/
+*.md

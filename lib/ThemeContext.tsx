@@ -11,32 +11,24 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: Readonly<{ children: ReactNode }>) {
   const [isDark, setIsDark] = useState(() => {
+    // Only run on client-side
     if (globalThis.window === undefined) return false;
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = globalThis.matchMedia('(prefers-color-scheme: dark)').matches;
-    return savedTheme === 'dark' || (!savedTheme && prefersDark);
+    
+    const savedTheme = globalThis.localStorage?.getItem('theme');
+    if (savedTheme) {
+      return savedTheme === 'dark';
+    }
+    return globalThis.matchMedia('(prefers-color-scheme: dark)').matches;
   });
 
+  // Persist theme changes
   useEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    globalThis.localStorage?.setItem('theme', isDark ? 'dark' : 'light');
+    globalThis.document?.documentElement.classList.toggle('dark', isDark);
   }, [isDark]);
 
   const toggleTheme = () => {
-    setIsDark((prev) => {
-      const newValue = !prev;
-      if (newValue) {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('theme', 'light');
-      }
-      return newValue;
-    });
+    setIsDark((prev) => !prev);
   };
 
   const value = useMemo(() => ({ isDark, toggleTheme }), [isDark]);

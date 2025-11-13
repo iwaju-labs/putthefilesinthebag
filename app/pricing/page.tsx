@@ -1,11 +1,38 @@
 'use client';
 
+import { useState } from 'react';
 import Navbar from "@/components/layout/Navbar";
-import { FiCheck, FiX } from "react-icons/fi";
+import { FiCheck, FiX, FiLoader } from "react-icons/fi";
 import { useTheme } from '@/lib/ThemeContext';
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export default function PricingPage() {
   const { isDark } = useTheme();
+  const [loading, setLoading] = useState(false);
+
+  const handlePurchase = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+      });
+
+      const data = await res.json();
+
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert('Failed to create checkout session');
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      alert('Failed to start checkout');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className={`min-h-screen ${isDark ? 'bg-[#060010]' : 'bg-gray-50'} transition-colors duration-300`}>
@@ -77,156 +104,162 @@ export default function PricingPage() {
                 <p className={isDark ? 'text-gray-300' : 'text-gray-600'}>One-time payment, use forever</p>
               </div>
 
-              <button className="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:cursor-pointer hover:bg-purple-700 transition">
-                Coming Soon
+              <button 
+                onClick={handlePurchase}
+                disabled={loading}
+                className="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:cursor-pointer hover:bg-purple-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {loading ? (
+                  <>
+                    <FiLoader className="w-5 h-5 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  'Get Lifetime Access'
+                )}
               </button>
             </div>
           </div>
 
           {/* Feature Comparison */}
-          <div className={`mt-16 rounded-2xl shadow-lg overflow-hidden border ${
+          <div className={`mt-16 rounded-lg overflow-hidden border ${
             isDark 
-              ? 'bg-white/5 border-white/10' 
+              ? 'bg-white/5 border-gray-700' 
               : 'bg-white border-gray-200'
           }`}>
-            <div className={`px-8 py-6 border-b ${
+            <div className={`px-6 py-4 border-b ${
               isDark 
-                ? 'bg-white/5 border-white/10' 
-                : 'bg-gray-100 border-gray-200'
+                ? 'bg-white/5 border-gray-700' 
+                : 'bg-gray-50 border-gray-200'
             }`}>
-              <h2 className={`text-2xl font-bold text-center ${isDark ? 'text-white' : 'text-gray-800'}`}>
+              <h2 className={`text-lg font-semibold text-center ${isDark ? 'text-white' : 'text-gray-900'}`}>
                 Feature Comparison
               </h2>
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="w-full text-sm">
                 <thead>
-                  <tr className={`border-b ${isDark ? 'border-white/10' : 'border-gray-200'}`}>
-                    <th className={`px-8 py-4 text-left font-semibold ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                  <tr className={`border-b ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
+                    <th className={`px-6 py-3 text-left font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                       Feature
                     </th>
-                    <th className={`px-8 py-4 text-center font-semibold ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                    <th className={`px-6 py-3 text-center font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                       Free
                     </th>
-                    <th className={`px-8 py-4 text-center font-semibold ${
+                    <th className={`px-6 py-3 text-center font-medium ${
                       isDark 
-                        ? 'bg-blue-900/20 text-gray-200' 
+                        ? 'bg-blue-500/10 text-gray-300' 
                         : 'bg-blue-50 text-gray-700'
                     }`}>
                       Lifetime
                     </th>
                   </tr>
                 </thead>
-                <tbody className={`divide-y ${isDark ? 'divide-white/10' : 'divide-gray-200'}`}>
-                  <tr className={isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50'}>
-                    <td className={`px-8 py-4 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                <tbody className={`divide-y ${isDark ? 'divide-gray-700' : 'divide-gray-200'}`}>
+                  <tr>
+                    <td className={`px-6 py-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                       Daily conversions
                     </td>
-                    <td className={`px-8 py-4 text-center ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                    <td className={`px-6 py-3 text-center ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                       3 per day
                     </td>
-                    <td className={`px-8 py-4 text-center font-semibold ${
+                    <td className={`px-6 py-3 text-center font-medium ${
                       isDark 
-                        ? 'text-blue-400 bg-blue-900/20' 
-                        : 'text-blue-600 bg-blue-50'
+                        ? 'text-blue-400 bg-blue-500/10' 
+                        : 'text-blue-700 bg-blue-50'
                     }`}>
                       Unlimited
                     </td>
                   </tr>
 
-                  <tr className={isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50'}>
-                    <td className={`px-8 py-4 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                  <tr>
+                    <td className={`px-6 py-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                       All format outputs (MP4, WebM, GIF, WebP, AVIF)
                     </td>
-                    <td className="px-8 py-4 text-center">
-                      <FiCheck className="w-6 h-6 text-green-500 mx-auto" />
+                    <td className="px-6 py-3 text-center">
+                      <FiCheck className={`w-4 h-4 mx-auto ${isDark ? 'text-green-400' : 'text-green-600'}`} />
                     </td>
-                    <td className={`px-8 py-4 text-center ${isDark ? 'bg-blue-900/20' : 'bg-blue-50'}`}>
-                      <FiCheck className="w-6 h-6 text-green-500 mx-auto" />
+                    <td className={`px-6 py-3 text-center ${isDark ? 'bg-blue-500/10' : 'bg-blue-50'}`}>
+                      <FiCheck className={`w-4 h-4 mx-auto ${isDark ? 'text-green-400' : 'text-green-600'}`} />
                     </td>
                   </tr>
 
-                  <tr className={isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50'}>
-                    <td className={`px-8 py-4 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                  <tr>
+                    <td className={`px-6 py-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                       Code snippets (HTML, React, Markdown)
                     </td>
-                    <td className="px-8 py-4 text-center">
-                      <FiCheck className="w-6 h-6 text-green-500 mx-auto" />
+                    <td className="px-6 py-3 text-center">
+                      <FiCheck className={`w-4 h-4 mx-auto ${isDark ? 'text-green-400' : 'text-green-600'}`} />
                     </td>
-                    <td className={`px-8 py-4 text-center ${isDark ? 'bg-blue-900/20' : 'bg-blue-50'}`}>
-                      <FiCheck className="w-6 h-6 text-green-500 mx-auto" />
-                    </td>
-                  </tr>
-
-                  <tr className={isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50'}>
-                    <td className={`px-8 py-4 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Watermarks</td>
-                    <td className="px-8 py-4 text-center">
-                      <span className={`font-medium ${isDark ? 'text-yellow-400' : 'text-yellow-600'}`}>
-                        Branded
-                      </span>
-                    </td>
-                    <td className={`px-8 py-4 text-center ${isDark ? 'bg-blue-900/20' : 'bg-blue-50'}`}>
-                      <FiX className="w-6 h-6 text-red-500 mx-auto" />
-                      <span className={`text-xs block mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                        No watermarks
-                      </span>
+                    <td className={`px-6 py-3 text-center ${isDark ? 'bg-blue-500/10' : 'bg-blue-50'}`}>
+                      <FiCheck className={`w-4 h-4 mx-auto ${isDark ? 'text-green-400' : 'text-green-600'}`} />
                     </td>
                   </tr>
 
-                  <tr className={isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50'}>
-                    <td className={`px-8 py-4 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Custom branding</td>
-                    <td className="px-8 py-4 text-center">
-                      <FiX className="w-6 h-6 text-red-500 mx-auto" />
+                  <tr>
+                    <td className={`px-6 py-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Watermarks</td>
+                    <td className={`px-6 py-3 text-center text-xs ${isDark ? 'text-yellow-400' : 'text-yellow-600'}`}>
+                      Yes
                     </td>
-                    <td className={`px-8 py-4 text-center ${isDark ? 'bg-blue-900/20' : 'bg-blue-50'}`}>
-                      <FiCheck className="w-6 h-6 text-green-500 mx-auto" />
+                    <td className={`px-6 py-3 text-center text-xs ${isDark ? 'bg-blue-500/10 text-gray-500' : 'bg-blue-50 text-gray-500'}`}>
+                      None
                     </td>
                   </tr>
 
-                  <tr className={isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50'}>
-                    <td className={`px-8 py-4 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                  <tr>
+                    <td className={`px-6 py-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Custom branding</td>
+                    <td className="px-6 py-3 text-center">
+                      <FiX className={`w-4 h-4 mx-auto ${isDark ? 'text-red-400' : 'text-red-500'}`} />
+                    </td>
+                    <td className={`px-6 py-3 text-center ${isDark ? 'bg-blue-500/10' : 'bg-blue-50'}`}>
+                      <FiCheck className={`w-4 h-4 mx-auto ${isDark ? 'text-green-400' : 'text-green-600'}`} />
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td className={`px-6 py-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                       Priority processing
                     </td>
-                    <td className="px-8 py-4 text-center">
-                      <FiX className="w-6 h-6 text-red-500 mx-auto" />
+                    <td className="px-6 py-3 text-center">
+                      <FiX className={`w-4 h-4 mx-auto ${isDark ? 'text-red-400' : 'text-red-500'}`} />
                     </td>
-                    <td className={`px-8 py-4 text-center ${isDark ? 'bg-blue-900/20' : 'bg-blue-50'}`}>
-                      <FiCheck className="w-6 h-6 text-green-500 mx-auto" />
+                    <td className={`px-6 py-3 text-center ${isDark ? 'bg-blue-500/10' : 'bg-blue-50'}`}>
+                      <FiCheck className={`w-4 h-4 mx-auto ${isDark ? 'text-green-400' : 'text-green-600'}`} />
                     </td>
                   </tr>
 
-                  <tr className={isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50'}>
-                    <td className={`px-8 py-4 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                  <tr>
+                    <td className={`px-6 py-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                       Higher quality exports
                     </td>
-                    <td className="px-8 py-4 text-center">
-                      <FiX className="w-6 h-6 text-red-500 mx-auto" />
+                    <td className="px-6 py-3 text-center">
+                      <FiX className={`w-4 h-4 mx-auto ${isDark ? 'text-red-400' : 'text-red-500'}`} />
                     </td>
-                    <td className={`px-8 py-4 text-center ${isDark ? 'bg-blue-900/20' : 'bg-blue-50'}`}>
-                      <FiCheck className="w-6 h-6 text-green-500 mx-auto" />
+                    <td className={`px-6 py-3 text-center ${isDark ? 'bg-blue-500/10' : 'bg-blue-50'}`}>
+                      <FiCheck className={`w-4 h-4 mx-auto ${isDark ? 'text-green-400' : 'text-green-600'}`} />
                     </td>
                   </tr>
 
-                  <tr className={isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50'}>
-                    <td className={`px-8 py-4 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                  <tr>
+                    <td className={`px-6 py-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                       ZIP download (all formats)
                     </td>
-                    <td className="px-8 py-4 text-center">
-                      <FiX className="w-6 h-6 text-red-500 mx-auto" />
+                    <td className="px-6 py-3 text-center">
+                      <FiX className={`w-4 h-4 mx-auto ${isDark ? 'text-red-400' : 'text-red-500'}`} />
                     </td>
-                    <td className={`px-8 py-4 text-center ${isDark ? 'bg-blue-900/20' : 'bg-blue-50'}`}>
-                      <FiCheck className="w-6 h-6 text-green-500 mx-auto" />
+                    <td className={`px-6 py-3 text-center ${isDark ? 'bg-blue-500/10' : 'bg-blue-50'}`}>
+                      <FiCheck className={`w-4 h-4 mx-auto ${isDark ? 'text-green-400' : 'text-green-600'}`} />
                     </td>
                   </tr>
 
-                  <tr className={isDark ? 'hover:bg-white/5' : 'hover:bg-gray-50'}>
-                    <td className={`px-8 py-4 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>Email support</td>
-                    <td className="px-8 py-4 text-center">
-                      <FiX className="w-6 h-6 text-red-500 mx-auto" />
+                  <tr>
+                    <td className={`px-6 py-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Email support</td>
+                    <td className="px-6 py-3 text-center">
+                      <FiX className={`w-4 h-4 mx-auto ${isDark ? 'text-red-400' : 'text-red-500'}`} />
                     </td>
-                    <td className={`px-8 py-4 text-center ${isDark ? 'bg-blue-900/20' : 'bg-blue-50'}`}>
-                      <FiCheck className="w-6 h-6 text-green-500 mx-auto" />
+                    <td className={`px-6 py-3 text-center ${isDark ? 'bg-blue-500/10' : 'bg-blue-50'}`}>
+                      <FiCheck className={`w-4 h-4 mx-auto ${isDark ? 'text-green-400' : 'text-green-600'}`} />
                     </td>
                   </tr>
                 </tbody>

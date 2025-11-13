@@ -2,8 +2,9 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { FiUpload, FiDollarSign, FiMoon, FiSun } from 'react-icons/fi';
+import { FiUpload, FiDollarSign, FiMoon, FiSun, FiUser } from 'react-icons/fi';
 import { useTheme } from '@/lib/ThemeContext';
+import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 
 export default function Navbar() {
   const { isDark, toggleTheme } = useTheme();
@@ -64,6 +65,33 @@ export default function Navbar() {
               <FiDollarSign className="w-4 h-4 sm:w-5 sm:h-5 group-hover:scale-110 transition-transform" />
               <span className="hidden sm:inline text-sm">Pricing</span>
             </Link>
+
+            {/* Auth Buttons */}
+            <SignedOut>
+              <SignInButton mode="modal">
+                <button
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
+                    isDark
+                      ? 'bg-blue-600 text-white hover:bg-blue-700'
+                      : 'bg-blue-600 text-white hover:bg-blue-700'
+                  }`}
+                >
+                  <FiUser className="w-4 h-4" />
+                  <span className="hidden sm:inline text-sm">Sign In</span>
+                </button>
+              </SignInButton>
+            </SignedOut>
+            
+            <SignedIn>
+              <UserButton 
+                afterSignOutUrl="/"
+                appearance={{
+                  elements: {
+                    avatarBox: "w-10 h-10"
+                  }
+                }}
+              />
+            </SignedIn>
 
             {/* Theme Toggle */}
             <button

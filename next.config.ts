@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Note: CORS headers removed since we're using server-side FFmpeg in Docker
+  // Client-side FFmpeg.wasm was too slow for production use
 };
 
 export default nextConfig;
