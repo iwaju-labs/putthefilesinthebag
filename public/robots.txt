@@ -1,0 +1,9 @@
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Disallow admin/api routes
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://putthefilesinthebag.xyz/sitemap.xml
