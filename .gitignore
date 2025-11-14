@@ -48,3 +48,5 @@ next-env.d.ts
 
 # uploads directory (temporary files)
 /uploads/
+fly.toml
+.github/workflows/fly-deploy.yml
