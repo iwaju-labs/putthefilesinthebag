@@ -72,8 +72,8 @@ export default function Navbar() {
                 <button
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
                     isDark
-                      ? 'bg-blue-600 text-white hover:bg-blue-700'
-                      : 'bg-blue-600 text-white hover:bg-blue-700'
+                      ? 'bg-purple-600 text-white hover:bg-purple-700'
+                      : 'bg-purple-600 text-white hover:bg-purple-700'
                   }`}
                 >
                   <FiUser className="w-4 h-4" />
