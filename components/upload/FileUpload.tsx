@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiUpload, FiImage, FiVideo } from "react-icons/fi";
+import { FiUpload, FiImage } from "react-icons/fi";
 
 interface FileUploadProps {
   onFileSelect: (file: File) => void;
@@ -19,21 +19,19 @@ export default function FileUpload({ onFileSelect }: FileUploadProps) {
   const handleFile = (file: File | undefined) => {
     if (!file) return;
 
-    const validTypes = ["image/", "video/"];
-    const isValid = validTypes.some((type) => file.type.startsWith(type));
+    const isImage = file.type.startsWith("image/");
 
-    if (!isValid) {
-      alert("Please upload an image or video file");
+    if (!isImage) {
+      alert("Please upload an image file");
       return;
     }
 
-    // Check file size limits
-    const isVideo = file.type.startsWith("video/");
-    const maxSize = isVideo ? 100 : 50; // MB
+    // Check file size limit (50MB for images)
+    const maxSize = 50; // MB
     const fileSizeMB = file.size / 1024 / 1024;
 
     if (fileSizeMB > maxSize) {
-      alert(`File too large. Maximum size for ${isVideo ? 'videos' : 'images'} is ${maxSize}MB`);
+      alert(`File too large. Maximum size is ${maxSize}MB`);
       return;
     }
 
@@ -59,23 +57,19 @@ export default function FileUpload({ onFileSelect }: FileUploadProps) {
         type="file"
         id="ptfitb-file-input"
         className="hidden"
-        accept="image/*,video/*"
+        accept="image/*"
         onChange={(e) => handleFile(e.target.files?.[0])}
       />
 
       {file ? (
         <div className="flex items-center justify-center gap-3">
-          {file.type.startsWith("image/") ? (
-            <FiImage className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-          ) : (
-            <FiVideo className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-          )}
+          <FiImage className="w-5 h-5 text-blue-600 dark:text-blue-400" />
           <div className="text-left">
             <p className="text-sm font-medium text-gray-900 dark:text-white">
               {file.name}
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              {file.type.startsWith("image/") ? "Image" : "Video"} • {(file.size / 1024 / 1024).toFixed(2)} MB
+              Image • {(file.size / 1024 / 1024).toFixed(2)} MB
             </p>
           </div>
         </div>
@@ -83,7 +77,7 @@ export default function FileUpload({ onFileSelect }: FileUploadProps) {
         <div>
           <FiUpload className="w-10 h-10 mx-auto mb-3 text-gray-400 dark:text-gray-500" />
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-            Drop your file here
+            Drop your image here
           </p>
           <label
             htmlFor="ptfitb-file-input"
@@ -92,7 +86,7 @@ export default function FileUpload({ onFileSelect }: FileUploadProps) {
             or click to browse
           </label>
           <p className="text-xs text-gray-500 dark:text-gray-500 mt-3">
-            Max: 50MB (images) • 100MB (videos)
+            Max: 50MB
           </p>
         </div>
       )}

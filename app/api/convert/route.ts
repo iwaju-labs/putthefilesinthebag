@@ -3,8 +3,7 @@ import { processFileInMemory } from '@/lib/converterInMemory';
 import { checkRateLimit } from '@/lib/rateLimitStore';
 import { auth, clerkClient } from '@clerk/nextjs/server';
 
-const MAX_FILE_SIZE_IMAGE = 50 * 1024 * 1024;  // 50MB for images
-const MAX_FILE_SIZE_VIDEO = 100 * 1024 * 1024; // 100MB for videos
+const MAX_FILE_SIZE = 50 * 1024 * 1024;  // 50MB for images
 
 export async function POST(request: NextRequest) {
     try {
@@ -69,24 +68,20 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Validate file type
-        const isVideo = file.type.startsWith('video/');
+        // Validate file type - images only
         const isImage = file.type.startsWith('image/');
 
-        if (!isVideo && !isImage) {
+        if (!isImage) {
             return NextResponse.json(
-                { error: 'Invalid file type. Only images and videos are supported' },
+                { error: 'Invalid file type. Only images are supported' },
                 { status: 400 }
             );
         }
 
-        // Validate file size based on type
-        const maxSize = isVideo ? MAX_FILE_SIZE_VIDEO : MAX_FILE_SIZE_IMAGE;
-        const maxSizeMB = Math.round(maxSize / 1024 / 1024);
-        
-        if (file.size > maxSize) {
+        // Validate file size
+        if (file.size > MAX_FILE_SIZE) {
             return NextResponse.json(
-                { error: `File too large. Maximum size for ${isVideo ? 'videos' : 'images'} is ${maxSizeMB}MB` },
+                { error: `File too large. Maximum size is 50MB` },
                 { status: 400 }
             );
         }
@@ -94,8 +89,7 @@ export async function POST(request: NextRequest) {
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
 
-        const fileType = isVideo ? 'video' : 'image';
-        const results = await processFileInMemory(buffer, file.name, fileType, formats, isPremium);
+        const results = await processFileInMemory(buffer, file.name, formats, isPremium);
 
         return NextResponse.json({
             success: true,

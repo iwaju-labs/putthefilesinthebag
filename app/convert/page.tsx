@@ -5,7 +5,6 @@ import Navbar from '@/components/layout/Navbar';
 import FileUpload from '@/components/upload/FileUpload';
 import { useTheme } from '@/lib/ThemeContext';
 import JSZip from 'jszip';
-import { VideoConversionProgress } from '@/lib/videoConverterClient';
 import { 
   FiDownload, 
   FiTrash2, 
@@ -15,12 +14,10 @@ import {
   FiCopy,
   FiArchive,
   FiRefreshCw,
-  FiVideo,
-  FiImage,
-  FiFile
+  FiImage
 } from 'react-icons/fi';
 
-type Format = 'mp4' | 'webm' | 'gif' | 'webp' | 'avif' | 'png' | 'jpg';
+type Format = 'webp' | 'avif' | 'png' | 'jpg';
 
 interface ConversionResult {
   format: string;
@@ -41,28 +38,15 @@ export default function ConvertPage() {
   const [error, setError] = useState<string | null>(null);
   const [results, setResults] = useState<ConversionResult[]>([]);
   const [remainingConversions, setRemainingConversions] = useState<number | null>(null);
-  const [conversionProgress, setConversionProgress] = useState<VideoConversionProgress | null>(null);
   const [userTier, setUserTier] = useState<string>('free');
   const { isDark } = useTheme();
 
-  // Determine available formats based on file type
-  const isVideo = file?.type.startsWith('video/');
-  const isImage = file?.type.startsWith('image/');
-  
-  const videoFormats: Format[] = ['mp4', 'webm', 'gif'];
-  const imageFormats: Format[] = ['webp', 'avif', 'png', 'jpg'];
-  
-  const availableFormats = isVideo ? videoFormats : isImage ? imageFormats : [];
+  // Available image formats only
+  const availableFormats: Format[] = ['webp', 'avif', 'png', 'jpg'];
 
   // Get icon for format
-  const getFormatIcon = (format: Format) => {
-    if (['mp4', 'webm', 'gif'].includes(format)) {
-      return <FiVideo className="w-4 h-4" />;
-    }
-    if (['webp', 'avif', 'png', 'jpg'].includes(format)) {
-      return <FiImage className="w-4 h-4" />;
-    }
-    return <FiFile className="w-4 h-4" />;
+  const getFormatIcon = () => {
+    return <FiImage className="w-4 h-4" />;
   };
 
   // Function to fetch remaining conversions
@@ -126,7 +110,6 @@ export default function ConvertPage() {
     setConverting(true);
     setError(null);
     setResults([]);
-    setConversionProgress(null);
 
     try {
       // Send all formats to server for conversion
@@ -153,7 +136,6 @@ export default function ConvertPage() {
       setError('Conversion failed. Please try again.');
     } finally {
       setConverting(false);
-      setConversionProgress(null);
     }
   };
 
@@ -278,26 +260,6 @@ export default function ConvertPage() {
               <div className={`mt-4 rounded-md p-3 border flex items-start gap-2 ${isDark ? 'bg-red-500/10 border-red-500/20 text-red-400' : 'bg-red-50 border-red-200 text-red-700'}`}>
                 <FiAlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
                 <p className="text-sm">{error}</p>
-              </div>
-            )}
-
-            {/* Conversion Progress */}
-            {converting && conversionProgress && (
-              <div className="mt-6">
-                <div className={`flex items-center gap-3 p-4 rounded-md ${isDark ? 'bg-blue-500/10 border border-blue-500/20' : 'bg-blue-50 border border-blue-200'}`}>
-                  <FiLoader className={`w-5 h-5 animate-spin ${isDark ? 'text-blue-400' : 'text-blue-600'}`} />
-                  <div className="flex-1">
-                    <p className={`text-sm font-medium ${isDark ? 'text-blue-400' : 'text-blue-700'}`}>
-                      {conversionProgress.message}
-                    </p>
-                    <div className={`w-full h-2 rounded-full mt-2 overflow-hidden ${isDark ? 'bg-gray-700' : 'bg-gray-200'}`}>
-                      <div 
-                        className="h-full bg-blue-500 transition-all duration-300"
-                        style={{ width: `${conversionProgress.progress}%` }}
-                      />
-                    </div>
-                  </div>
-                </div>
               </div>
             )}
 

@@ -10,14 +10,9 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.35.1",
-    "@ffmpeg-installer/ffmpeg": "^1.1.0",
-    "@ffmpeg/ffmpeg": "^0.12.15",
-    "@ffmpeg/util": "^0.12.2",
     "@stripe/stripe-js": "^8.4.0",
-    "archiver": "^7.0.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "fluent-ffmpeg": "^2.1.3",
     "jszip": "^3.10.1",
     "lucide-react": "^0.553.0",
     "next": "16.0.3",
@@ -31,7 +26,6 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/fluent-ffmpeg": "^2.1.28",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

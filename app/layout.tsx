@@ -11,11 +11,11 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Put The Files In the Bag",
-  description: "Convert videos and images into optimized, web-ready formats with ready-to-embed code snippets",
+  description: "Convert images into optimized, web-ready formats with ready-to-embed code snippets",
   metadataBase: new URL("https://putthefilesinthebag.xyz"),
   openGraph: {
     title: "Put The Files In the Bag",
-    description: "Convert videos and images into optimized, web-ready formats with ready-to-embed code snippets",
+    description: "Convert images into optimized, web-ready formats with ready-to-embed code snippets",
     url: "https://putthefilesinthebag.xyz",
     siteName: "Put The Files In the Bag",
     images: [
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
         url: "/assets/og/ptfitb-of.png",
         width: 1200,
         height: 630,
-        alt: "Put The Files In the Bag - Video and Image Converter",
+        alt: "Put The Files In the Bag - Image Converter",
       },
     ],
     locale: "en_US",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Put The Files In the Bag",
-    description: "Convert videos and images into optimized, web-ready formats with ready-to-embed code snippets",
+    description: "Convert images into optimized, web-ready formats with ready-to-embed code snippets",
     images: ["/assets/og/ptfitb-of.png"],
   },
   robots: {

@@ -1,10 +1,9 @@
-# Put The Files In The Bag 🎥 → 📦
+# Put The Files In The Bag 🖼️ → 📦
 
-A modern media conversion tool that outputs multiple optimized formats with ready-to-embed code snippets.
+A modern image conversion tool that outputs multiple optimized formats with ready-to-embed code snippets.
 
 ## Features
 
-- 🎬 **Video conversion**: MP4, WebM, GIF
 - 🖼️ **Image optimization**: WebP, AVIF, PNG, JPEG
 - 📋 **Code snippets**: HTML, React, Markdown (ready to copy)
 - ⚡ **In-memory processing**: Fast and secure
@@ -13,7 +12,7 @@ A modern media conversion tool that outputs multiple optimized formats with read
 
 ## How It Works
 
-1. **Upload**: Drop your video or image file
+1. **Upload**: Drop your image file
 2. **Select**: Choose which output formats you want
 3. **Convert**: Everything processes in-memory (nothing saved)
 4. **Download**: Get your files with embed code immediately
@@ -42,11 +41,13 @@ Open [http://localhost:3000](http://localhost:3000) with your browser.
 
 ## Tech Stack
 
-- **Frontend**: Next.js 15 (App Router), TypeScript, Tailwind CSS
-- **Processing**: FFmpeg (video), Sharp (images) - all in-memory
+- **Frontend**: Next.js 16 (App Router), TypeScript, Tailwind CSS
+- **Processing**: Sharp (images) - all in-memory
 - **Auth**: Clerk for user management
+- **Payments**: Stripe for lifetime tier
 - **Rate Limiting**: File-based storage (`.rate-limit/store.json`)
 - **Data Transfer**: Base64-encoded data URLs
+- **Hosting**: Vercel (no Docker needed!)
 
 ## Architecture
 

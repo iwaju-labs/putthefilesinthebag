@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { MdPermMedia } from "react-icons/md";
-import { FaCopyright, FaCode, FaArrowRight } from "react-icons/fa";
+import { FaCopyright, FaCode } from "react-icons/fa";
 import Image from "next/image";
 
 import Navbar from "@/components/layout/Navbar";
@@ -72,7 +72,7 @@ export default function Home() {
                 isDark ? "text-gray-300" : "text-gray-600"
               }`}
             >
-              Upload videos or images → Get optimized formats + ready-to-embed
+              Upload images → Get optimized formats + ready-to-embed
               code snippets
             </p>
 
@@ -103,7 +103,7 @@ export default function Home() {
                     isDark ? "text-gray-300" : "text-gray-600"
                   }`}
                 >
-                  MP4, WebM, GIF, WebP, AVIF - all in one go
+                  WebP, AVIF, PNG, JPG - all in one go
                 </p>
               </div>
               <div
