@@ -1,19 +1,19 @@
 import JSZip from 'jszip';
-import { ConversionResult } from './converter';
+import { ConversionResult } from './converterInMemory';
 
 export async function createZipFromResults(
   results: ConversionResult[]
 ): Promise<Blob> {
   const zip = new JSZip();
 
-  // Fetch and add each file to the zip
+  // Add each file to the zip from base64 data
   for (const result of results) {
     try {
-      const response = await fetch(result.url);
-      const blob = await response.blob();
-      zip.file(result.path, blob);
+      // Extract base64 data from data URL
+      const base64Data = result.data.split(',')[1];
+      zip.file(result.filename, base64Data, { base64: true });
     } catch (error) {
-      console.error(`Failed to add ${result.path} to zip:`, error);
+      console.error(`Failed to add ${result.filename} to zip:`, error);
     }
   }
 

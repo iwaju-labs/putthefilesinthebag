@@ -45,7 +45,7 @@ export default function ConvertPage() {
   const availableFormats: Format[] = ['webp', 'avif', 'png', 'jpg'];
 
   // Get icon for format
-  const getFormatIcon = () => {
+  const getFormatIcon = (_format: Format) => {
     return <FiImage className="w-4 h-4" />;
   };
 
